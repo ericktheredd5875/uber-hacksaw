@@ -6,6 +6,7 @@ APP_NAME=uber_hacksaw
 
 SHELL := /bin/bash
 PY := python3.13
+AUTO_MSG := "auto-commit: $(shell date)"
 
 pip-reset:
 	uv pip install -e .
@@ -25,19 +26,26 @@ sec:
 run:
 	uv run ${APP_NAME} start
 
-commit:
-	COMMIT_MSG=${1:-"auto-commit: $(date)"}
+commit-auto:
+	@echo "📁 Adding changes for ${APP_NAME}..."
+	git add .
+	@echo "📝 Auto-Committing with message: ${AUTO_MSG}"
+	git commit -m "${AUTO_MSG}"
+	@echo "🚀 Pushing to remote for ${APP_NAME}..."
+	git push
+	@echo "✅ Done!"
 
-	echo "📁 Adding changes for ${APP_NAME}..."
+commit:
+	@echo "📁 Adding changes for ${APP_NAME}..."
 	git add .
 
-	echo "📝 Committing with message: $COMMIT_MSG"
-	git commit -m "$COMMIT_MSG"
+	@echo "📝 Committing with message: ${MSG}"
+	git commit -m "${MSG}"
 
-	echo "🚀 Pushing to remote for ${APP_NAME}..."
+	@echo "🚀 Pushing to remote for ${APP_NAME}..."
 	git push
 
-	echo "✅ Done!"
+	@echo "✅ Done!"
 
 git-dir-change:
 	git mv ${ORG} ${NEW}

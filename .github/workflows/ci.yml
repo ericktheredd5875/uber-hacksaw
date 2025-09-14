@@ -89,5 +89,14 @@ jobs:
     - name: Test EICAR detection via stdin
       run: |
         echo "Testing EICAR detection..."
-        uv run python -m tests.tools.generate_corpus --also-stream-real | uv run python -m uber_hacksaw.cli scan --stdin
-        echo "Exit code should be 1 (detection found)"
+        set +e  # Don't exit on error
+        uv run python -m tests.tools.generate_corpus --also-stream-real \
+        | uv run python -m uber_hacksaw.cli scan --stdin
+        exit_code=$?
+        set -e  # Re-enable exit on error
+        if [ $exit_code -eq 1 ]; then
+          echo "✅ EICAR detection working correctly (exit code 1 as expected)"
+        else
+          echo "❌ Unexpected exit code: $exit_code"
+          exit 1
+        fi
