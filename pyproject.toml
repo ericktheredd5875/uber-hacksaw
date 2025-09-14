@@ -53,6 +53,7 @@ exclude = [
     "**/tests",
 ]
 
+
 [tool.bandit]
 exclude_dirs = ["tests", ".venv"]
 #tests = ["B201", "B301"]

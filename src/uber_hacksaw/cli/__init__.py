@@ -124,20 +124,24 @@ def _scan_path(path: Path, recursive: bool) -> list[dict[str, Any]]:
     return results
 
 
+PATH_OPTION = typer.Option(None, "--path", "-p", help="File or directory to scan.")
+STDIN_OPTION = typer.Option(
+    False, "--stdin", "-s", help="Read bytes from STDIN (pipe input)."
+)
+RECURSIVE_OPTION = typer.Option(
+    True, "--recursive/--no-recursive", "-r", help="Scan directories recursively."
+)
+OUTPUT_OPTION = typer.Option(
+    "console", "--output", "-o", help="Output format: console | JSON"
+)
+
+
 @app.command(name="scan")
 def scan(
-    path: Path | None = typer.Option(
-        None, "--path", "-p", help="File or directory to scan."
-    ),
-    stdin: bool = typer.Option(
-        False, "--stdin", "-s", help="Read bytes from STDIN (pipe input)."
-    ),
-    recursive: bool = typer.Option(
-        True, "--recursive/--no-recursive", "-r", help="Scan directories recursively."
-    ),
-    output: str = typer.Option(
-        "console", "--output", "-o", help="Output format: console | JSON"
-    ),
+    path: Path | None = PATH_OPTION,
+    stdin: bool = STDIN_OPTION,
+    recursive: bool = RECURSIVE_OPTION,
+    output: str = OUTPUT_OPTION,
 ) -> None:
     """
     Scan files, directories, or raw bytes from STDIN.
@@ -166,7 +170,7 @@ def scan(
             if "error" in r:
                 print(f"[SKIPPED] {tgt}: {r['error']}")
                 continue
-            
+
             file_type = r.get("type", "unknown")
             if r["clean"]:
                 print(f"[CLEAN] {tgt} ({file_type}): {r['size']} bytes")
