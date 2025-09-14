@@ -73,9 +73,7 @@ def _detect_bytes(data: bytes) -> list[dict[str, Any]]:
     return hits
 
 
-def _scan_bytes_obj(
-    label: str, data: bytes, file_path: Path | None = None
-) -> dict[str, Any]:
+def _scan_bytes_obj(label: str, data: bytes, file_path: Path | None = None) -> dict[str, Any]:
     hits = _detect_bytes(data)
     file_type = (
         _detect_file_type(file_path or Path(label), data)
@@ -125,15 +123,11 @@ def _scan_path(path: Path, recursive: bool) -> list[dict[str, Any]]:
 
 
 PATH_OPTION = typer.Option(None, "--path", "-p", help="File or directory to scan.")
-STDIN_OPTION = typer.Option(
-    False, "--stdin", "-s", help="Read bytes from STDIN (pipe input)."
-)
+STDIN_OPTION = typer.Option(False, "--stdin", "-s", help="Read bytes from STDIN (pipe input).")
 RECURSIVE_OPTION = typer.Option(
     True, "--recursive/--no-recursive", "-r", help="Scan directories recursively."
 )
-OUTPUT_OPTION = typer.Option(
-    "console", "--output", "-o", help="Output format: console | JSON"
-)
+OUTPUT_OPTION = typer.Option("console", "--output", "-o", help="Output format: console | JSON")
 
 
 @app.command(name="scan")
