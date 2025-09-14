@@ -18,7 +18,12 @@ def test_cli_help():
         capture_output=True,
         text=True,
         cwd=Path(__file__).parent.parent,
-        env={**os.environ, "NO_COLOR": "1"},  # Disable colors
+        env={
+            **os.environ,
+            "NO_COLOR": "1",
+            "TERM": "dumb",  # Disable colors
+            "FORCE_COLOR": "0",  # Disable colors
+        },
     )
 
     print(result.stdout)
