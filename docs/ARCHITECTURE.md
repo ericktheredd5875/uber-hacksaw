@@ -6,6 +6,13 @@ uber-hacksaw/
 │  ├─ milestones
 │  ├─ ARCHITECTURE.md
 │  └─ PROJECT_STATE.md
+├─ datasets/ 
+│  ├─ README
+│  ├─ manifest.json
+│  ├─ benign/
+│  │  └─ text/
+│  └─ eicar/
+├─ docker/
 │    
 ├─ cli/                     	# CLI entrypoints (scan file/dir, daemon mode)
 ├─ src/
@@ -48,6 +55,11 @@ uber-hacksaw/
 │	 └─ update/
 │	    ├─ fetcher.py            # Periodic pull of rules, reputation sets
 │	    └─ signer.py             # Verify rule bundle signatures
+├─ scripts/
+│  └─ corpus_cli.py
+├─ vm/
+│  ├─ linux/
+│  └─ windows/
 ├─ tests/
 │  └─ ...
 │
@@ -56,6 +68,7 @@ uber-hacksaw/
 ├─ main.py
 ├─ Makefile
 ├─ pyproject.toml
+├─ docker-compose.yml
 ├─ README.md
 └─ tests/
 ```

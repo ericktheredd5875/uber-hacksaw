@@ -6,13 +6,13 @@
 
 ### Deliverables
 
-- [ ] Repo scaffold, pyproject.toml, Makefile, pre-commit (black/ruff/mypy), CI (pytest on 3 OSes).
-- [ ] Safe test corpus: EICAR, benign binaries, sample docs; VM images for Windows & Linux.
-- [ ] Threat model & data handling policy (no exfiltration of file contents by default; only hashes/metadata).
+- [x] Repo scaffold, pyproject.toml, Makefile, pre-commit (black/ruff/mypy), CI (pytest on 3 OSes).
+- [x] Safe test corpus: EICAR, benign binaries, sample docs; VM images for Windows & Linux.
+- [x] Threat model & data handling policy (no exfiltration of file contents by default; only hashes/metadata).
 
 ### Acceptance
 
-- [ ] scanner scan ./samples prints a table (path, type, size, hash).
+- [x] scanner scan ./samples prints a table (path, type, size, hash).
 
 ---
 

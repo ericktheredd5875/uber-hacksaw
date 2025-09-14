@@ -15,14 +15,14 @@ dependencies = [
 ]
 
 [project.scripts]
-#dicerealms = "dicerealms.cli:app"
-#dicerealms-old = "dicerealms.__main__:app"
+uber-hacksaw = "uber_hacksaw.cli:app"
 
 [project.urls]
 Homepage = "https://github.com/ericktheredd5875/uber-hacksaw"
 
 [dependency-groups]
 dev = [
+    "bandit>=1.8.6",
     "black>=25.1.0",
     "pyright>=1.1.404",
     "pytest>=8.4.1",
@@ -45,10 +45,15 @@ testpaths = ["tests"]
 line-length = 100
 target-version = "py313"
 lint.select = ["E","F","I","UP","B"]
-exclude = [
-    "**/tests",
-]
 
 lint.ignore = [
     "E501",  # line length handled by formatter
 ]
+exclude = [
+    "**/tests",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+#tests = ["B201", "B301"]
+#skips = ["B101", "B601"]

@@ -1,0 +1,89 @@
+{
+  "generated_at": "2025-09-14T21:39:48.244850Z",
+  "entries": [
+    {
+      "path": "README.md",
+      "size": 204,
+      "sha256": "5f698e8c1920d797a9b0460153925dd2b21f1590adb77720683711668c8666bd",
+      "mime": "text/markdown",
+      "label": "benign"
+    },
+    {
+      "path": "benign/hello.txt",
+      "size": 13,
+      "sha256": "572a95fee9c0f320030789e4883707affe12482fbb1ea04b3ea8267c87a890fb",
+      "mime": "text/plain",
+      "label": "benign"
+    },
+    {
+      "path": "benign/lorem.txt",
+      "size": 58,
+      "sha256": "3af4e7fcc94b664b46d8ad6ee4b39854df395b4f890925af6d3d6ff7ae81f332",
+      "mime": "text/plain",
+      "label": "benign"
+    },
+    {
+      "path": "benign/text/lorem-001.txt",
+      "size": 2900,
+      "sha256": "2bb1fbf96a05f84c7a04a956dad4f7494580aa2bed91fd782d5714dbedff19a1",
+      "mime": "text/plain",
+      "label": "benign"
+    },
+    {
+      "path": "benign/text/sample.csv",
+      "size": 65,
+      "sha256": "322296cf0a563ccd29b1b979fa6be25a52f095d0b4be4b83d52ad16ca151104d",
+      "mime": "text/csv",
+      "label": "benign"
+    },
+    {
+      "path": "benign/text/sample.html",
+      "size": 69,
+      "sha256": "06bade5ddeb303f3dc11cada6cb27d2e22206807a17842ea6b5991d0ecffbf93",
+      "mime": "text/html",
+      "label": "benign"
+    },
+    {
+      "path": "benign/text/sample.json",
+      "size": 128,
+      "sha256": "d23dd83b3c95859e6d307efb71fcd2b24ac3be911b90eb7f3121e05aa466558a",
+      "mime": "application/json",
+      "label": "benign"
+    },
+    {
+      "path": "benign/text/sample.xml",
+      "size": 73,
+      "sha256": "c333afaf1a7ff55da5e49646ddde96ba4e0de679952920b88579ad6021725049",
+      "mime": "text/xml",
+      "label": "benign"
+    },
+    {
+      "path": "eicar/eicar.zip",
+      "size": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "mime": "application/x-zip-compressed",
+      "label": "test:eicar"
+    },
+    {
+      "path": "eicar/eicar_mutated.txt",
+      "size": 80,
+      "sha256": "c15e586df32f2494997ea10d748d205d2d147739dc62ca941652dce2d76e8bbc",
+      "mime": "text/plain",
+      "label": "test:eicar"
+    },
+    {
+      "path": "eicar/eicar_truncated.txt",
+      "size": 79,
+      "sha256": "666c0e3eb12b574c3fe5e42a9c4f1e5e4a3c7bea818b9eedad827e41b9ba6bdc",
+      "mime": "text/plain",
+      "label": "test:eicar"
+    },
+    {
+      "path": "manifest.json",
+      "size": 2656,
+      "sha256": "ba7663ba5ee9ea8d218a2af3e43e1b35e3823bf7ac354233b6ac302d925f5a66",
+      "mime": "application/json",
+      "label": "benign"
+    }
+  ]
+}
