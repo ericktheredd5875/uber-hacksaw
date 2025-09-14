@@ -24,8 +24,8 @@ def test_cli_help():
     print(result.stdout)
     assert result.returncode == 0
     assert "uber-hacksaw" in result.stdout
-    assert "--help" in result.stdout
-    assert "scan" in result.stdout
+    assert "│ --help" in result.stdout
+    assert "│ scan" in result.stdout
 
 
 def test_cli_scan_nonexistent_path():
