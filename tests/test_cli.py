@@ -1,14 +1,13 @@
 """Tests for the CLI module."""
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Dict
 
 import pytest
-
-# UV_RUN
 
 
 # uv run python -m uber_hacksaw.cli --help
@@ -19,13 +18,14 @@ def test_cli_help():
         capture_output=True,
         text=True,
         cwd=Path(__file__).parent.parent,
+        env={**os.environ, "NO_COLOR": "1"},  # Disable colors
     )
 
     print(result.stdout)
     assert result.returncode == 0
     assert "uber-hacksaw" in result.stdout
-    assert "│ --help" in result.stdout
-    assert "│ scan" in result.stdout
+    assert "--help" in result.stdout
+    assert "scan" in result.stdout
 
 
 def test_cli_scan_nonexistent_path():

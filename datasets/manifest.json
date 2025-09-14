@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-09-14T22:33:22.542777Z",
+  "generated_at": "2025-09-14T22:44:08.877411Z",
   "entries": [
     {
       "path": "README.md",
@@ -81,7 +81,7 @@
     {
       "path": "manifest.json",
       "size": 2656,
-      "sha256": "bb51730276667d5f988fb1b0ea6d052131c9de1c29aa60c8a66577dc31e1ec67",
+      "sha256": "1f026eb205b1cc8436e91e50eb4f1a963549251372bd204359f94edcc33dad7c",
       "mime": "application/json",
       "label": "benign"
     }
