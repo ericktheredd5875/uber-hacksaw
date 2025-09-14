@@ -101,3 +101,9 @@ jobs:
           echo "❌ Unexpected exit code: $exit_code"
           exit 1
         fi
+    
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: ericktheredd5875/uber-hacksaw
