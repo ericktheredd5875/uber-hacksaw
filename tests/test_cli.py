@@ -11,6 +11,7 @@ import pytest
 # UV_RUN
 
 
+# uv run python -m uber_hacksaw.cli --help
 def test_cli_help():
     """Test that CLI help is displayed correctly."""
     result = subprocess.run(
@@ -19,6 +20,8 @@ def test_cli_help():
         text=True,
         cwd=Path(__file__).parent.parent,
     )
+
+    print(result.stdout)
     assert result.returncode == 0
     assert "uber-hacksaw" in result.stdout
     assert "--help" in result.stdout
