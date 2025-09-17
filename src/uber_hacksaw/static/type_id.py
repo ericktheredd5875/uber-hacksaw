@@ -11,14 +11,17 @@ from loguru import logger
 # Make python-magic optional to avoid Windows access violations
 try:
     import magic
+
     MAGIC_AVAILABLE = True
 except (ImportError, OSError, Exception) as e:
     MAGIC_AVAILABLE = False
+
     # Create a mock magic object for testing purposes
     class MockMagic:
         @staticmethod
         def from_buffer(data, mime=False):
             return None
+
     magic = MockMagic()
     logger.debug(f"python-magic not available: {e}")
 
@@ -122,8 +125,6 @@ def detect_file_type(file_path: Path, data: bytes) -> dict[str, Any]:
     if result["mime_type"] is None:
         result["mime_type"] = _detect_file_type_by_extension(file_path)
 
-    logger.info(
-        f"File type detection completed: {result['file_name']} -> {result['mime_type']}"
-    )
+    logger.info(f"File type detection completed: {result['file_name']} -> {result['mime_type']}")
 
     return result
