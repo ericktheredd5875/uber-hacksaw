@@ -7,6 +7,7 @@ rule EICAR_Test_Loose
   strings:
     $a = "EICAR-STANDARD-ANTIVIRUS-TEST-FILE" nocase
     $b = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR" nocase
+    $c = "X5O!P%@AP[4\\PZX54(P^)" nocase  // Match truncated version
   condition:
     any of them
 }

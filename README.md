@@ -20,7 +20,7 @@ Malware Scanner written in Python
 
 * PE/ELF/Mach-O: pefile, lief, pyelftools, macholib
 * Signatures: yara-python, regex
-* Fuzzy hashes: ssdeep (pydeep), tlsh
+* Fuzzy hashes: ppdeep
 * Archives/Docs: py7zr, rarfile, oletools, python-magic
 * System: psutil, watchdog (real-time FS), pywin32 (Win), cryptography
 * Telemetry: opentelemetry-sdk, structlog
@@ -90,7 +90,7 @@ Malware Scanner written in Python
 
 ### Week 2
 
-* Add ssdeep/TLSH; simple heuristic rules (entropy/imports).
+* Add ppdeep; simple heuristic rules (entropy/imports).
 * Archive traversal (zip/tar/gz) with size/depth caps.
 * Quarantine stub (copy + metadata manifest) and safe restore.
 * Baseline metrics & structured logs; publish 0.1.0 pre-release.

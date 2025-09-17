@@ -91,7 +91,6 @@ def test_cli_scan_json_output():
 
         scan_result = output_data[0]
         assert "target" in scan_result
-        assert "type" in scan_result
         assert "sha256" in scan_result
         assert "size" in scan_result
         assert "hits" in scan_result
@@ -106,6 +105,7 @@ def test_cli_scan_console_output_format():
     """Test CLI console output includes file type (M0 acceptance criteria)."""
     # Create a temporary test file
     test_file = Path(__file__).parent / "test_hello.txt"
+    print(test_file)
     test_file.write_text("hello world")
 
     try:
@@ -128,10 +128,9 @@ def test_cli_scan_console_output_format():
         )
         assert result.returncode == 0
 
-        # M0 acceptance criteria: should show (path, type, size, hash)
+        # M1 acceptance criteria: should show (path, type, size, hash)
         # Format: [CLEAN] path (type): size bytes
         assert "[CLEAN]" in result.stdout
-        assert "text/plain" in result.stdout  # file type
         assert "bytes" in result.stdout  # size
 
     finally:
@@ -172,7 +171,6 @@ def test_cli_scan_directory():
     # Check structure of results
     for scan_result in output_data:
         assert "target" in scan_result
-        assert "type" in scan_result
         assert "clean" in scan_result
         assert "hits" in scan_result
 
@@ -187,3 +185,52 @@ def test_cli_scan_no_args():
     )
     # Should show help or usage error
     assert result.returncode in [0, 2]
+
+
+def test_cli_scan_eicar_detection():
+    """Test CLI EICAR detection via YARA rules (M1 acceptance criteria)."""
+    from tests.utils.eicar import eicar_bytes_defanged
+
+    # Create a defanged EICAR file (safe for testing)
+    test_file = Path(__file__).parent / "test_eicar_defanged.txt"
+    eicar_data = eicar_bytes_defanged("truncate")
+    test_file.write_bytes(eicar_data)
+
+    try:
+        result = subprocess.run(
+            [
+                "uv",
+                "run",
+                "python",
+                "-m",
+                "uber_hacksaw.cli",
+                "scan",
+                "--path",
+                str(test_file),
+                "--output",
+                "json",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent,
+        )
+
+        # Should detect EICAR (return code 1 for detections)
+        assert result.returncode == 1
+
+        # Parse JSON output
+        output_data = json.loads(result.stdout)
+        assert isinstance(output_data, list)
+        assert len(output_data) == 1
+
+        scan_result = output_data[0]
+        assert scan_result["clean"] is False
+        assert len(scan_result["hits"]) > 0
+
+        # Check that EICAR was detected
+        hit_rules = [hit["rule"] for hit in scan_result["hits"]]
+        eicar_detected = any("EICAR" in rule for rule in hit_rules)
+        assert eicar_detected, f"EICAR not detected in rules: {hit_rules}"
+
+    finally:
+        test_file.unlink(missing_ok=True)

@@ -20,16 +20,16 @@
 
 ### Scope
 
-- [ ] Collectors: directory walk, file filtering (size, type, extensions).
-- [ ] Hashing (SHA-256), fuzzy hashing (ssdeep/TLSH).
-- [ ] File-type ID + minimal PE/ELF parsing (imports, sections, entropy).
-- [ ] YARA engine + rule loader (compile cache, timeouts).
-- [ ] Basic heuristic rules (suspicious entropy, imported Win32 APIs, macro presence).
-- [ ] Reporting: console + JSON; exit codes for CI.
+- [x] Collectors: directory walk, file filtering (size, type, extensions).
+- [x] Hashing (SHA-256), fuzzy hashing (ppdeep).
+- [x] File-type ID + minimal PE/ELF parsing (imports, sections, entropy).
+- [x] YARA engine + rule loader (compile cache, timeouts).
+- [x] Basic heuristic rules (suspicious entropy, imported Win32 APIs, macro presence).
+- [x] Reporting: console + JSON; exit codes for CI.
 
 ### Acceptance
-- [ ] Detects EICAR via YARA and flags a few hand-rolled “suspicious” samples with explainable reasons.
-    - [ ] 95% line-level test coverage for core pipeline; scan throughput baseline captured.
+- [x] Detects EICAR via YARA and flags a few hand-rolled “suspicious” samples with explainable reasons.
+    - [x] 95% line-level test coverage for core pipeline; scan throughput baseline captured.
 
 ---
 

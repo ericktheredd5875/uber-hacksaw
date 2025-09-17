@@ -9,9 +9,13 @@ authors = [
     { name="Eric Harris", email="ericktheredd5875@gmail.com" }
 ]
 dependencies = [
+    "entropy>=0.1.5",
     "loguru>=0.7.3",
+    "pefile>=2024.8.26",
+    "ppdeep>=20250625",
     "rich>=14.1.0",
     "typer>=0.17.3",
+    "yara-python>=4.5.0",
 ]
 
 [project.scripts]
@@ -24,6 +28,7 @@ Homepage = "https://github.com/ericktheredd5875/uber-hacksaw"
 dev = [
     "bandit>=1.8.6",
     "black>=25.1.0",
+    "psutil>=7.1.0",
     "pyright>=1.1.404",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
@@ -43,6 +48,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
+src = ["src"]
 target-version = "py313"
 lint.select = ["E","F","I","UP","B"]
 
@@ -53,6 +59,21 @@ exclude = [
     "**/tests",
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "S101", # Use of `assert` detected
+    "D103", # Missing docstring in public function
+]
+#C:\CodeBases\uber-hacksaw\src\uber_hacksaw\static\type_id.py
+"**/type_id.py" = [
+    "F401", # Imported but unused
+]
+"docs/**" = [
+    "INP001",   # Requires __init__.py but docs folder is not a package.
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.bandit]
 exclude_dirs = ["tests", ".venv"]

@@ -12,7 +12,7 @@ pip-reset:
 	uv pip install -e .
 
 test:
-	uv run pytest
+	uv run pytest -v
 
 lint:
 	uv run ruff check .

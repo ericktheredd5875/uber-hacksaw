@@ -35,7 +35,7 @@ uber-hacksaw/
 │	 │  ├─ elf.py                # ELF parsing
 │	 │  ├─ macho.py              # Mach-O parsing
 │	 │  ├─ macros.py             # Office macro extraction (oletools)
-│	 │  └─ classifiers.py        # Heuristics, fuzzy hash, TLSH/ssdeep
+│	 │  └─ classifiers.py        # Heuristics, fuzzy hash, ppdeep
 │	 ├─ dynamic/
 │	 │  ├─ sandbox_client.py     # Remote sandbox API client (safe first)
 │	 │  ├─ behavior_schema.py    # Event model (files, procs, registry, net)

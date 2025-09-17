@@ -12,6 +12,10 @@ from typing import Any
 
 import typer
 
+from ..core.engine import ScanEngine
+from ..io.fs_utils import calculate_data_hashes
+from ..static.type_id import detect_file_type
+
 app = typer.Typer(add_completion=False, help="uber-hacksaw CLI")
 
 
@@ -35,32 +39,6 @@ def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def _detect_file_type(file_path: Path, data: bytes) -> str:
-    """Detect file type using multiple methods."""
-    # Try MIME type first
-    mime_type, _ = mimetypes.guess_type(str(file_path))
-    if mime_type:
-        return mime_type
-
-    # Fallback to content-based detection
-    if data.startswith(b"\x7fELF"):
-        return "application/x-executable"
-    elif data.startswith(b"MZ"):
-        return "application/x-msdownload"
-    elif data.startswith(b"PK"):
-        return "application/zip"
-    elif data.startswith(b"%PDF"):
-        return "application/pdf"
-    elif data.startswith(b"<!DOCTYPE") or data.startswith(b"<html"):
-        return "text/html"
-    elif data.startswith(b"{") or data.startswith(b"["):
-        return "application/json"
-    elif data.startswith(b"<?xml"):
-        return "text/xml"
-    else:
-        return "application/octet-stream"
-
-
 def _detect_bytes(data: bytes) -> list[dict[str, Any]]:
     """Tiny built-in detector for EICAR (canonical + marker)."""
     # TODO: replace with real engine later
@@ -73,13 +51,18 @@ def _detect_bytes(data: bytes) -> list[dict[str, Any]]:
     return hits
 
 
-def _scan_bytes_obj(label: str, data: bytes, file_path: Path | None = None) -> dict[str, Any]:
+def _scan_bytes_obj(
+    label: str, data: bytes, file_path: Path | None = None
+) -> dict[str, Any]:
+
     hits = _detect_bytes(data)
-    file_type = (
-        _detect_file_type(file_path or Path(label), data)
-        if file_path or label != "<stdin>"
-        else "application/octet-stream"
-    )
+
+    # Use the comprehensive file type detection
+    if file_path or label != "<stdin>":
+        file_type_result = detect_file_type(file_path or Path(label), data)
+        file_type = file_type_result["mime_type"]
+    else:
+        file_type = "application/octet-stream"
 
     return {
         "target": label,
@@ -123,11 +106,15 @@ def _scan_path(path: Path, recursive: bool) -> list[dict[str, Any]]:
 
 
 PATH_OPTION = typer.Option(None, "--path", "-p", help="File or directory to scan.")
-STDIN_OPTION = typer.Option(False, "--stdin", "-s", help="Read bytes from STDIN (pipe input).")
+STDIN_OPTION = typer.Option(
+    False, "--stdin", "-s", help="Read bytes from STDIN (pipe input)."
+)
 RECURSIVE_OPTION = typer.Option(
     True, "--recursive/--no-recursive", "-r", help="Scan directories recursively."
 )
-OUTPUT_OPTION = typer.Option("console", "--output", "-o", help="Output format: console | JSON")
+OUTPUT_OPTION = typer.Option(
+    "console", "--output", "-o", help="Output format: console | JSON"
+)
 
 
 @app.command(name="scan")
@@ -142,41 +129,75 @@ def scan(
     Exit code 0 if clean, 1 if any detections, 2 on usage errors.
     """
 
+    engine = ScanEngine()
     results: list[dict[str, Any]] = []
     if stdin:
         data = sys.stdin.buffer.read()
-        results = [_scan_bytes_obj("<stdin>", data)]
+        result = {
+            "target": "<stdin>",
+            "sha256": _sha256(data),
+            "size": len(data),
+            "hits": [],
+            "clean": True,
+        }
+
+        # Calculate hashes
+        hashes = calculate_data_hashes(data)
+        result.update(hashes)
+
+        # Run detection on stdin data
+        from ..detect.scoring import analyze_heuristics
+        from ..detect.signatures import YaraEngine
+        from ..static.pe import analyze_pe
+        from ..static.type_id import detect_file_type
+
+        file_type = detect_file_type(Path("<stdin>"), data)
+        pe_info = analyze_pe(data) if file_type.get("is_executable") else {}
+
+        yara_engine = YaraEngine()
+        yara_matches = yara_engine.scan_data(data)
+        heuristic_findings = analyze_heuristics(data, file_type, pe_info)
+
+        result["hits"] = yara_matches + heuristic_findings
+        result["clean"] = len(result["hits"]) == 0
+        result["file_type"] = file_type
+        result["pe_info"] = pe_info
+
+        results = [result]
+
     elif path is not None:
         if not path.exists():
             typer.echo(f"Error: path does not exist: {path}", err=True)
             raise typer.Exit(2)
-        results = _scan_path(path, recursive)
+
+        results = engine.scan_path(path, recursive)
     else:
         typer.echo("Error: provide --stdin or --path/-p", err=True)
+        raise typer.Exit(2)
 
     # Render
     if output.lower() == "json":
-        print(json.dumps(results, indent=2))
+        typer.echo(json.dumps(results, indent=2))
     else:
         detections = 0
         for r in results:
             tgt = r["target"]
-            if "error" in r:
-                print(f"[SKIPPED] {tgt}: {r['error']}")
+            if r.get("error") is not None:
+                typer.echo(f"[SKIPPED] {tgt}: {r['error']}")
                 continue
 
-            file_type = r.get("type", "unknown")
+            file_type = r.get("mime_type", "unknown")
             if r["clean"]:
-                print(f"[CLEAN] {tgt} ({file_type}): {r['size']} bytes")
+                typer.echo(f"[CLEAN] {tgt} ({file_type}): {r['size']} bytes")
             else:
                 detections += 1
                 rules = ", ".join(h["rule"] for h in r["hits"])
-                print(f"[DETECTED] {tgt} ({file_type}) -> {rules}")
+                typer.echo(f"[DETECTED] {tgt} ({file_type}) -> {rules}")
 
         if detections:
-            print(f"\nSummary: {detections} target(s) detected.")
+            typer.echo(f"\nSummary: {detections} target(s) detected.")
         else:
-            print("\nSummary: no detections")
+            typer.echo("\nSummary: no detections")
 
     # Exit code
     if any(not r.get("clean", True) for r in results):

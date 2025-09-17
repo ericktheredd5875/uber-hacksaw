@@ -60,7 +60,7 @@ This document outlines the threat model and data handling policies for uber-hack
 
 #### Collected Data
 - **File Metadata**: Path, size, timestamps, permissions
-- **Content Hashes**: SHA-256, fuzzy hashes (ssdeep/TLSH)
+- **Content Hashes**: SHA-256, fuzzy hashes (ppdeep)
 - **File Type**: MIME type, magic bytes, extension
 - **Static Analysis**: PE/ELF headers, imports, sections, entropy
 - **Detection Results**: Rule matches, risk scores, confidence levels
