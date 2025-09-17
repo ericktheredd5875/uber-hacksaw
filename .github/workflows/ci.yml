@@ -118,3 +118,12 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: ericktheredd5875/uber-hacksaw
+        flags: unittests
+        # name: coverage-xml
+        # path: coverage.xml
+        verbose: true
+        fail_ci_if_error: true
+        # file: coverage.xml
+        env_vars: CODECOV_TOKEN
+        # env_vars_action: set
+        # env_vars_action: set
